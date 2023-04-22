@@ -1,0 +1,63 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'java-library'
+    id 'io.spring.dependency-management' version "${dependencyManagement}"
+}
+
+allprojects {
+    group 'com.epam.holub'
+    version '2023.04-SNAPSHOT'
+}
+
+subprojects {
+
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
+    apply plugin: 'java'
+    apply plugin: 'war'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0'
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.7.0'
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0'
+        testImplementation group: 'com.github.stefanbirkner', name: 'system-rules', version: '1.19.0'
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.4'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+project(':admin') {
+    dependencies {
+        implementation project(':services')
+        implementation project(':utils')
+    }
+}
+
+project(':services') {
+    dependencies {
+        implementation project(':utils')
+    }
+}
+
+project(':web') {
+    dependencies {
+        implementation project(':services')
+    }
+}

@@ -1,0 +1,6 @@
+dependencies {
+    api project(":services")
+}
+jar {
+    enabled = true
+}
