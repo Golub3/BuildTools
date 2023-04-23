@@ -5,74 +5,70 @@ class Configuration{
 }
 
 def printJobName() {
-    sh "echo 'Invoking job ${params.nameOfJob}'"
+    bat "echo 'Invoking job ${params.nameOfJob}'"
 }
 
 def cloneCodeFromRepo() {
-    sh "echo '*************** Cloning code ***************'"
+    bat "echo '*************** Cloning code ***************'"
     git Configuration.gitRepo
 }
 
 def runWithSelectedBuildTool() {
-    sh "echo '*************** Building project with ${params.selectedBuildTool} ***************'"
-    dir('builders-all'){
-        sh "pwd"
-        if (params.selectedBuildTool == 'Maven') {
-            buildProjectUsingMaven()
-        } else {
-            buildPrjectUsingGradle()
-        }
-    }   
+    bat "echo '*************** Building project with ${params.selectedBuildTool} ***************'"
+    bat "cd"
+    if (params.selectedBuildTool == 'Maven') {
+        buildProjectUsingMaven()
+    } else {
+        buildPrjectUsingGradle()
+    }
 }
 
 def buildProjectUsingMaven(){
     echo '---------------- Building using Maven ----------------'
-    sh "mvn clean package -DskipTests"
+    bat "mvn clean package -DskipTests"
 }
 
 def buildPrjectUsingGradle(){
     echo '---------------- Building using Gradle ----------------'
-    sh "gradle clean assemble"
+    bat "gradle clean assemble"
     // can use gradle clean build for unit test
 }
 
 def testWithSelectedBuildTool() {
-    sh "echo '*************** Running test with ${params.selectedBuildTool} ***************'"
-    dir('builders-all'){
-        sh "pwd"
-        if (params.selectedBuildTool == 'Maven') {
-            testProjectUsingMaven()
-        } else {
-            testPrjectUsingGradle()
-        }
-    }   
+    bat "echo '*************** Running test with ${params.selectedBuildTool} ***************'"
+    bat "cd"
+    if (params.selectedBuildTool == 'Maven') {
+        testProjectUsingMaven()
+    } else {
+        testPrjectUsingGradle()
+    }
 }
 
 def testProjectUsingMaven(){
-    sh "echo '---------------- Testing using Maven ----------------'"
-    sh "mvn test"
+    bat "echo '---------------- Testing using Maven ----------------'"
+    bat "mvn test"
 }
 
 def testPrjectUsingGradle(){
-    sh "echo '---------------- Testing using Gradle ----------------'"
-    sh "gradle test"
+    bat "echo '---------------- Testing using Gradle ----------------'"
+    bat "gradle test"
 }
 
 def runQaProcess(){
-    sh "echo '*************** Running QA process ***************'"
+    bat "echo '*************** Running QA process ***************'"
     if( params.separatedJob == 'Yes'){
         build job: Configuration.qaJobName 
     } else {
-        sh "echo '---------------- Running QA process ----------------'"       
+        bat "echo '---------------- Running QA process ----------------'"       
     }   
 }
 
 def runProdProcess(){
-    sh "echo '*************** Running Production process ***************'"
+    bat "echo '*************** Running Production process ***************'"
     if( params.separatedJob == 'Yes'){
         build job: Configuration.prodJobName 
     } else {
-         sh "echo '---------------- Running Production process ----------------'"            
+         bat "echo '---------------- Running Production process ----------------'"            
     }  
 }
 
